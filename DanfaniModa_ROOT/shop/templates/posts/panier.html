@@ -1,0 +1,53 @@
+{% extends 'posts/base.html' %}{% load static %}{% block content %} {% if user.panier %}
+<div class="btnsupp">
+    <a href="{% url 'index' %}" class="ajoutpan">Ajouter a mon panier</a>
+    <a href="{% url 'supprimer' %}" class="supp">Supprimer mon panier</a>
+</div>
+{% endif %}
+<div class="pan">
+    <h1>Les produits de mon papier</h1>
+</div>
+
+<div class="pan1">
+    <table>
+        <tr class="col">
+            <th>Image</th>
+            <th>Titre</th>
+            <th>Quantité</th>
+            <th>Prix</th>
+            <th>Total</th>
+            <th>Etat</th>
+        </tr>
+        {% for order in mes_articles %}
+        <tr class="colonne">
+
+            <td><img src=" /{{ order.article.image }}" alt="image"></td>
+            <td class="titr_pan">{{ order.article.titre }}</td>
+            <td class="quantity">{{ order.quantite }}</td>
+            <td class="prix">{{ order.article.prix }}</td>
+            <td class="prix">{{ order.total }}</td>
+
+            <td class="etat">
+                <a href="{% url 'modifier' order.id %}"><img src="{% static 'images/modif.png' %}" alt="update"></a>
+                <a href="{% url 'supprimer_produit' order.id %}"><img src="{% static 'images/dele.png' %}" alt="delete"></a>
+            </td>
+
+        </tr>
+
+
+        {% endfor %}
+
+
+        <tr class="total">
+
+            <td>Total General</td>
+            <td>{{ mes_articles.totaux }}</td>
+
+        </tr>
+
+    </table>
+</div>
+<div class="comm">
+    <a href="" class="com">Commander le panier</a>
+</div>
+{% endblock %}

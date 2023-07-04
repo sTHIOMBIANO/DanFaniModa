@@ -1,0 +1,28 @@
+{% extends 'posts/base.html' %}{% load static %}{% block content %}
+<div class="detail">
+    <div class="image">
+        <img src="/{{ Dproduit.image }}" alt="image1">
+    </div>
+    <div class="contenu">
+        <h1>{{ Dproduit.titre }}</h1>
+        <h3>{{ Dproduit.prix }}</h3>
+        <p>{{ Dproduit.description }}</p>
+        <a href="{{ Dproduit.get_absolute_url }}" class="bouton">Ajouter au panier</a>
+    </div>
+
+</div>
+
+<div class="container">
+    {% for product in prod %}
+    <div class="box">
+        <a href="/{{ product.titre }}"><img src="/{{ product.image }}" alt="image1"></a>
+        <div class="titre">
+            <h3>{{ product.titre }}</h3>
+            <h4>{{ product.prix }}</h4>
+        </div>
+        <button type="" class="btn_img">Ajouter au panier</button>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

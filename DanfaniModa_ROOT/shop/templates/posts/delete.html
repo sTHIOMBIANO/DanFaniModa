@@ -1,0 +1,15 @@
+{% extends 'posts/base.html' %}{% load static %}{% block content %}
+
+<div class="delete">
+    <h1>Etes-vous sur de vouloir supprimer le produit </strong>
+    </h1>
+    <div class="deleteform">
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <button class="deletebouton" type="submit">Supprimer</button>
+            <a class="deleteannuler" href="{% url 'panier' %}">Annuler</a>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

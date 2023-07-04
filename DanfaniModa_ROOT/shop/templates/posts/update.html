@@ -1,0 +1,11 @@
+ {% extends 'posts/base.html' %}{% load static %}{% block content %}
+<div class="update">
+    <h2>Vous ne pouvez modifier que la quantité de chaque produit dans votre panier</h2>
+    <form action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="formp"> {{ form.as_p }}</div>
+        <button type="submit">Valider</button>
+    </form>
+</div>
+
+{% endblock %}

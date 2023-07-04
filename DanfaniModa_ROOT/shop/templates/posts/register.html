@@ -1,0 +1,49 @@
+{% extends 'posts/base.html' %}{% load static %}{% block content %}
+<div class="message">
+    {% for message in messages %}
+    <h2>{{ message }}</h2>
+    {% endfor %}
+</div>
+
+<form action="{% url 'register' %}" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="register">
+        <div class="form_control">
+            <div class="title">
+                <h1>Formulaire d'Enregistrement</h1>
+
+            </div>
+            <hr>
+            <div class="form">
+                <div class="form_group">
+                    <label for="username">Nom d'Utilisateur</label>
+                    <input type="text" name="username" id="username" required>
+                </div>
+                <div class="form_group">
+                    <label for="name">Nom</label>
+                    <input type="text" name="name" id="name" required>
+                </div>
+                <div class="form_group">
+                    <label for="surname">Prenom</label>
+                    <input type="text" name="surname" id="surname" required>
+                </div>
+                <div class="form_group">
+                    <label for="username">Email</label>
+                    <input type="email" name="email" id="email" required>
+                </div>
+                <div class="form_group">
+                    <label for="passwrod">Mot de Passe</label>
+                    <input type="password" name="password" id="password" required>
+                </div>
+                <div class="form_group">
+                    <label for="pass">Confirmer Mot de Passe</label>
+                    <input type="password" name="pass" id="pass" required>
+                </div>
+                <div class="form_group">
+                    <input type="submit" class="btn_register" id="username" value="S'inscrire">
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}

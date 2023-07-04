@@ -1,0 +1,14 @@
+{% extends 'posts/base.html' %}{% load static %}{% block content %}
+<div class="container">
+    {% for product in pret_a_porter %}
+    <div class="box">
+        <a href="{{ product.id }}"><img src="/{{ product.image }}" alt="image1"></a>
+        <div class="titre">
+            <h3>{{ product.titre }}</h3>
+            <h4>{{ product.prix }}</h4>
+        </div>
+        <button type="" class="btn_img">Ajouter au panier</button>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

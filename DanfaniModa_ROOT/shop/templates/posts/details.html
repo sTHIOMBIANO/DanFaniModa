@@ -1,0 +1,15 @@
+{% extends 'posts/base.html' %}{% load static %}{% block content %}
+<div class="detail">
+    <div class="image">
+        <img src="/{{ Dproduit.image }}" alt="image1">
+    </div>
+    <div class="contenu">
+        <h1>{{ Dproduit.titre }}</h1>
+        <h3>{{ Dproduit.prix }}</h3>
+        <p>{{ Dproduit.description }}</p>
+        {% if user.is_authenticated %}
+        <a href="{{ Dproduit.get_absolute_url }}" class="bouton">Ajouter au panier</a> {% endif %}
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="{% static 'style.css' %}" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+    <header>
+        <nav class="navbar">
+            <a href="" class="logo">DanFaniModa</a>
+            <div class="navlink">
+                <ul>
+                    <li><a href="{% url 'index' %}">Accueil</a></li>
+                    <li><a href="{% url 'pagne' %}">Pagne</a></li>
+                    {% if user.panier %}
+                    <li><a href="{% url 'panier' %}">Panier({{ user.panier.orders.count }})</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'porter' %}">Pret A Porter</a></li>
+                    <li><a href="">Categorie</a></li>
+                </ul>
+            </div>
+            <div class="menu-burger"><img src="{% static 'images/menu-burger.png' %}" alt=""></div>
+        </nav>
+    </header>
+    {% block content %}{% endblock %}
+</body>
+{% block js %}{% endblock %}
+<script>
+    const menuberger = document.querySelector('.menu-burger');
+    const navlinks = document.querySelector('.navlink');
+    menuberger.addEventListener('click', () => {
+        navlinks.classList.toggle('mobile-menu')
+    });
+</script>
+
+</html>
