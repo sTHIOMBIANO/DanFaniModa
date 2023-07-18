@@ -4,11 +4,91 @@
         <img src="/{{ Dproduit.image }}" alt="image1">
     </div>
     <div class="contenu">
-        <h1>{{ Dproduit.titre }}</h1>
-        <h3>{{ Dproduit.prix }}</h3>
+        <h1 id="b{{ Dproduit.id }}">{{ Dproduit.titre }}</h1>
+        <h3 id="p{{ Dproduit.id }}">{{ Dproduit.prix }}</h3>
         <p>{{ Dproduit.description }}</p>
         {% if user.is_authenticated %}
-        <a href="{{ Dproduit.get_absolute_url }}" class="bouton">Ajouter au panier</a> {% endif %}
+        <div class="groupbouton">
+
+
+
+            {% for msg in messages %}
+            <div class="error-message">{{ msg }}</div>{% endfor %}
+
+            <div class="quant"><button class="moin" onclick="
+                var item='{{ Dproduit.id }}';
+                const totalClicks = document.getElementById('totalClicks'+item);
+                const totalvalue = parseInt(totalClicks.innerText) - 1;
+                totalClicks.innerText = totalvalue;
+                if(totalvalue<1){totalClicks.innerText=1;}">-</button>
+
+
+                <span class="nombre" id="totalClicks{{ Dproduit.id }}">1</span>
+
+
+                <button class="plu" onclick="
+                    var item='{{ Dproduit.id }}';
+                    const totalClicks = document.getElementById('totalClicks'+item);
+                    const sumvalue = parseInt(totalClicks.innerText) + 1;
+                    totalClicks.innerText = sumvalue;">+</button>
+            </div>
+
+            <a href="" class="bouton" onclick="
+        event.preventDefault();
+        var bouton=this;
+        var item_id = '{{ Dproduit.id }}';
+        var prix = parseFloat(document.getElementById('p' + item_id).innerHTML);
+        console.log(prix);
+        var name= document.getElementById('b' + item_id).innerHTML;
+        console.log(name);
+        var imageurl='{{ Dproduit.image.url }}'
+        console.log(imageurl);
+        var quantite = parseInt(document.getElementById('totalClicks'+item_id).innerHTML);
+
+        var total=prix*quantite;
+        console.log(total)
+
+        var unitaire = parseFloat(document.getElementById('p' + item_id).innerHTML);
+        if(bouton.desabled){
+            alert('ce produit est deja dans votre panier');
+        }
+        if (localStorage.getItem('panier') == null) {
+            var panier={};
+        }else{
+           var panier = JSON.parse(localStorage.getItem('panier'));
+        }
+        
+        if (panier.hasOwnProperty(item_id)) {
+            panier[item_id] = panier[item_id] + 1;
+           console.log(panier);
+           
+           //const qte=panier[item_id][2]
+           //console.log(qte);
+           //qte +=parseInt(getElementById('totalClicks'+item_id).innerHTML);
+           //panier[item_id][2]=qte
+
+        }else{
+            panier[item_id] = 1;
+           
+            //console.log(total);
+            panier[item_id]=[imageurl,name,quantite, prix,total];
+            console.log(panier[item_id]);
+            bouton.desabled=true;
+            
+        }
+        console.log(panier);
+        localStorage.setItem('panier', JSON.stringify(panier));
+        document.getElementById('panier').innerHTML = 'Panier(' + Object.keys(panier).length + ')';
+        Swal.fire({
+                    icon: 'success',
+                    text: 'Le produit a été ajouté avec succès à votre panier.',
+                    confirmButtonText: 'OK'
+                });
+        
+        ">Ajouter au panier</a>
+
+
+        </div>{% endif %}
     </div>
 
 </div>

@@ -1,28 +1,42 @@
+from itertools import count
+import json
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
-from .models import Produit,Panier,Order
+from .models import  Produit,Commande,Lignecommande
 from django.contrib.auth import login,logout,authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-#from .forms import ContactForm,UserForm,ProductForm
+from .forms import ProductForm
 from django.shortcuts import redirect
 from django.contrib import messages
+from django.db.models import Q
 # from django.core.paginator import Paginator
-from .forms import OrderForm
+#from .forms import OrderForm
 # Create your views here.
 
 
 #@login_required
 def index(request):
 	produit_objet=Produit.objects.all()
-	slider=Produit.objects.all()
+	#slider=Produit.objects.get(id=request)
+	messages_error = messages.get_messages(request)
 	item=request.GET.get("items-name")
 	if item!= ' ' and item is not None:
-		produit_objet=Produit.objects.filter(prix__lte=item)
+		try:
+			item=int(item)
+			produit_objet=Produit.objects.filter(prix__lte=item)
+		except ValueError:
+			produit_objet=Produit.objects.filter(Q(titre__icontains=item))
+		
+			
+		
+			
+
 	#paginator=Paginator(produit_objet,6)
 	#page=request.GET.get('page')
 	#produit_objet=paginator.get_page(page)
-	return render(request,"posts/index.html",{'produit_objet':produit_objet})
+	return render(request,"posts/index.html",{'produit_objet':produit_objet,'messages_error':messages_error})
 
 
 
@@ -30,8 +44,12 @@ def index(request):
 def detail(request,id):
 	Dproduit=Produit.objects.get(id=id)
 	sim=Dproduit.similaire
-	print(sim)
 	prod=Produit.objects.filter(similaire=sim)
+
+	if not request.user.is_authenticated:
+		messages.error(request,"Veuillez vous connecter pour acceder a cette page")
+		return redirect('index')
+	
 	return render(request,"posts/detail.html",{"Dproduit":Dproduit,"prod":prod})
 
 def pagne(request):
@@ -49,51 +67,114 @@ def produit_similaire_details(request,titre):
 
 
 def ajouter_au_panier(request,titre):
-	user=request.user
-	product=get_object_or_404(Produit,titre=titre)
-	cart,_=Panier.objects.get_or_create(user=user)
-	order,created=Order.objects.get_or_create(user=user,article=product)
-	if created:
-		cart.orders.add(order)
-		cart.save()
-	else:
-		order.quantite+=1
-		order.save()
+	# user=request.user
+	# product=get_object_or_404(Produit,titre=titre)
+	# cart,_=Lignecommande.objects.get_or_create(user=user)
+	# order,created=Order.objects.get_or_create(user=user,article=product)
+	# if created:
+	# 	cart.orders.add(order)
+	# 	cart.save()
+	# else:
+	# 	order.quantite+=1
+	# 	order.save()
 
 	return redirect(reverse('details',kwargs={'titre':titre}))
 
 
 def panier(request):
-	
-	mon_panier=get_object_or_404(Panier,user=request.user)
-	return render(request,"posts/panier.html",{"mes_articles":mon_panier.orders.all()})
+	# mon_panier=get_object_or_404(Panier,user=request.user)
+	# total=mon_panier.totaux()
+	return render(request,"posts/panier.html")
+
 
 
         
-def supprimer(request):
-	if panier:=request.user.panier:
-		panier.orders.all().delete()
-		panier.delete()
-		return redirect('index')
+# def supprimer(request):
+# 	if panier:=request.user.panier:
+# 		panier.orders.all().delete()
+# 		panier.delete()
+# 		return redirect('index')
 	
-def supprimer_produit(request,my_id):
+# def supprimer_produit(request,my_id):
 	
-	prod_supp=get_object_or_404(Order,id=my_id)
+# 	prod_supp=get_object_or_404(Order,id=my_id)
 	
+# 	if request.method=='POST':
+# 		prod_supp.delete()
+# 		return redirect('panier')
+# 	return render(request,"posts/delete.html")
+
+
+# def modifier(request,my_id):
+# 	prod_mod=get_object_or_404(Order,id=my_id)
+# 	form=OrderForm(request.POST,request.FILES or None,instance=prod_mod)
+# 	if form.is_valid():
+# 		form.save()
+# 		return redirect('panier')
+# 	return render(request,"posts/update.html",{'form':form})
+
+@login_required
+def commande(request):
 	if request.method=='POST':
-		prod_supp.delete()
-		return redirect('panier')
-	return render(request,"posts/delete.html")
+		
+		#panier_id=request.POST['panier_id']
+		#mon_panier=get_object_or_404(Panier,user=user,id=panier_id
+		
+		itemdonnee=request.POST.get('item')
+		print(itemdonnee)
+		if itemdonnee=='{}':
+			messages.error(request,'Desole,vous ne pouvez pas commander un panier vide')
+		else:
+			items=json.loads(itemdonnee)
+			print(items)
+			user=request.user
+			#commande=Commande.objects.get(user=user)
+
+			cart,created=Commande.objects.get_or_create(user=user)
+
+			telephone=request.POST['Telephone']
+			pays=request.POST['pays']
+			ville=request.POST['ville']
+			rue=request.POST['rue']
+		
+		
+			cart.tel=telephone
+			cart.pays=pays
+			cart.ville=ville
+			cart.rue=rue
+			cart.save()
+
+			for item,valeur in items.items():
+				print(item)
+				produit_key = item  
+				produit = Produit.objects.get(pk=int(produit_key))
+
+				quantite=valeur[2]
+				
+				maligne,_=Lignecommande.objects.get_or_create(command=cart,produit=produit)
+				
+				
+				maligne.quantite=quantite
+		
+				maligne.save()
+
+			# mon_panier.orders.ordered=True
+			# mon_panier.orders.all().delete()
+			return redirect('final')
+		
+	else:
+		print("mauvais")
+		messages.error(request,"une erreur s'est produite")
+	return render(request,'posts/panier.html')
 
 
-def modifier(request,my_id):
-	prod_mod=get_object_or_404(Order,id=my_id)
-	form=OrderForm(request.POST,request.FILES or None,instance=prod_mod)
-	if form.is_valid():
-		form.save()
-		return redirect('panier')
-	return render(request,"posts/update.html",{'form':form})
+def final(request):
+	user=request.user
+	return render(request,"posts/verification.html",{"user":user})
 
+def tableau(request):
+	
+	return render(request,'posts/tableau.html')
 
 # def affiche(request):
 # 	message=""
@@ -199,35 +280,66 @@ def deconnect(request):
 	#return redirect('index')
 	return redirect('connect')
 
-# @login_required
-# def ajouter(request):
-# 	#form=ProductForm()
-# 	#if request.method=='POST':
-# 	messages=''
-# 	form=ProductForm(request.POST,request.FILES or None)
-# 	if form.is_valid():
-# 		form.save()
-# 		form=ProductForm()
-# 		messages="Ajout effectué avec succes "
-# 	else:
-# 		print("mauvais")
-# 	return render(request,"posts/ajouter.html",{"form":form})
-
-# @login_required
-# def modifier(request,my_id):
-# 	objet=get_object_or_404(Produit,id=my_id)
-# 	form=ProductForm(request.POST,request.FILES or None,instance=objet)
-# 	if form.is_valid():
-# 		form.save()
-# 		form=ProductForm()
-# 	return render(request,"posts/update.html",{'form':form})
+@login_required
+def ajouter(request):
+	#form=ProductForm()
+	#if request.method=='POST':
+	messages=''
+	form=ProductForm(request.POST,request.FILES or None)
+	if form.is_valid():
+		form.save()
+		form=ProductForm()
+		messages="Ajout effectué avec succes "
+	else:
+		print("mauvais")
+	return render(request,"posts/ajouter.html",{"form":form})
 
 
-# @login_required
-# def supprimer(request,my_id):
-# 	objet=get_object_or_404(Produit,id=my_id)
-# 	name=objet.titre
-# 	if request.method=='POST':
-# 		objet.delete()
-# 		return redirect('pagne')
-# 	return render(request,"posts/delete.html",{'name':name})
+def commandeUser(request):
+	
+	com = Lignecommande.objects.all()
+	
+	item=request.GET.get("items-name")
+	if item!= ' ' and item is not None:
+		
+		try:
+			com=Lignecommande.objects.filter(Q(command__user__username__icontains=item))
+			# produit_objet=Produit.objects.filter(prix__lte=item)
+		except ValueError:
+			# produit_objet=Produit.objects.filter(Q(titre__icontains=item))
+			print('erreur')
+
+	
+	
+	# date = com.first().date_commande if com.exists() else None
+	return render(request,'posts/commande.html',{'com':com})
+
+def modifier(request):
+	mesProduit=Produit.objects.all()
+	item=request.GET.get("items-name")
+	if item!= ' ' and item is not None:
+		try:
+			item=int(item)
+			mesProduit=Produit.objects.filter(prix__icontains=item)
+		except ValueError:
+			mesProduit=Produit.objects.filter(titre__icontains=item)
+	return render(request,'posts/modifierProduit.html',{'mesProduit':mesProduit})
+
+@login_required
+def modifier_Produit(request,my_id):
+	objet=get_object_or_404(Produit,id=my_id)
+	form=ProductForm(request.POST,request.FILES or None,instance=objet)
+	if form.is_valid():
+		form.save()
+		form=ProductForm()
+	return render(request,"posts/modifier.html",{'form':form})
+
+
+@login_required
+def supprimer(request,my_id):
+	objet=get_object_or_404(Produit,id=my_id)
+	name=objet.titre
+	if request.method=='POST':
+		objet.delete()
+		return redirect('supprimer')
+	return render(request,"posts/delete.html",{'name':name})

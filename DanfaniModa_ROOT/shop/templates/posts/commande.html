@@ -1,0 +1,32 @@
+{% extends 'posts/tableau.html' %}{% load static %}{% block contenu %}
+<div>
+    <table class="table_border">
+        <thead>
+            <tr>
+                <th>Utilisateur</th>
+                <th>Image</th>
+                <th>Titre</th>
+                <th>Quantite</th>
+                <th>Prix</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            {% for item in com %}
+            <tr>
+                <td class="item">{{ item.command.user }}</td>
+                <td class="img"><img src="/{{ item.produit.image }}" alt="" style="height: 50px; width: 50px;"></td>
+                <td class="itempro">{{ item.produit.titre }}</td>
+                <td class="itemquan">{{ item.quantite }}</td>
+                <td class="itempri">{{ item.produit.prix }}</td>
+                <td class="itemdate">{{ item.date_commande }}</td>
+            </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+
+
+</div>
+{% endblock %}

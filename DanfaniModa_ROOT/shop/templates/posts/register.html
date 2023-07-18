@@ -1,7 +1,11 @@
 {% extends 'posts/base.html' %}{% load static %}{% block content %}
+<hr>
+
 <div class="message">
     {% for message in messages %}
-    <h2>{{ message }}</h2>
+    <center>
+        <h2>{{ message }}</h2>
+    </center>
     {% endfor %}
 </div>
 

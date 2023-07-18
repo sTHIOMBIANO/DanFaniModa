@@ -1,53 +1,248 @@
-{% extends 'posts/base.html' %}{% load static %}{% block content %} {% if user.panier %}
+{% extends 'posts/base.html' %}{% load static %}{% block content %}
+<hr>
 <div class="btnsupp">
     <a href="{% url 'index' %}" class="ajoutpan">Ajouter a mon panier</a>
-    <a href="{% url 'supprimer' %}" class="supp">Supprimer mon panier</a>
+    <a href="" class="supp" onclick="
+    localStorage.clear();">Vider mon panier</a>
 </div>
-{% endif %}
+
 <div class="pan">
     <h1>Les produits de mon papier</h1>
 </div>
 
-<div class="pan1">
-    <table>
-        <tr class="col">
-            <th>Image</th>
-            <th>Titre</th>
-            <th>Quantité</th>
-            <th>Prix</th>
-            <th>Total</th>
-            <th>Etat</th>
-        </tr>
-        {% for order in mes_articles %}
-        <tr class="colonne">
+<div class="formpanier">
 
-            <td><img src=" /{{ order.article.image }}" alt="image"></td>
-            <td class="titr_pan">{{ order.article.titre }}</td>
-            <td class="quantity">{{ order.quantite }}</td>
-            <td class="prix">{{ order.article.prix }}</td>
-            <td class="prix">{{ order.total }}</td>
+    <div class="pan1">
+        <table>
+            <thead>
+                <tr class="col">
+                    <th>Image</th>
+                    <th>Titre</th>
+                    <th>Quantité</th>
+                    <th>Prix</th>
+                    <th>Total</th>
+                    <th>Etat</th>
 
-            <td class="etat">
-                <a href="{% url 'modifier' order.id %}"><img src="{% static 'images/modif.png' %}" alt="update"></a>
-                <a href="{% url 'supprimer_produit' order.id %}"><img src="{% static 'images/dele.png' %}" alt="delete"></a>
-            </td>
-
-        </tr>
+                </tr>
+            </thead>
+            <center>
+                {% for message in messages %}
+                <div class="alert alert-danger">{{ message }}</div>
+                {% endfor %}
+            </center>
+            <tbody class="colonne" id="item-list">
 
 
-        {% endfor %}
+
+            </tbody>
 
 
-        <tr class="total">
 
-            <td>Total General</td>
-            <td>{{ mes_articles.totaux }}</td>
 
-        </tr>
 
-    </table>
+        </table>
+    </div>
+    <form action="{% url 'commande' %}" method="POST">
+        {% csrf_token %} {% if user.is_authenticated %}
+        <input type="hidden" id="items" name="item" value=""> {% endif %}
+        <div class="pan2">
+            <h2>Informations Suplementaires</h2>
+            {% for msm in messages %}
+            <h4>{{ msm }}</h4>
+            {% endfor %}
+
+            <div id="formtel">
+                <label for="tel">Telephone</label>
+                <input type="number" name="Telephone" id="tel" required>
+            </div>
+            <div id="formpays">
+                <label for="pays">Pays</label>
+                <select id="pays" name="pays" id="pays">
+                    <option value="Burkina Faso" selected>Burkina Faso</option>
+                    <option value="Togo">Togo</option>
+                    <option value="Ghana">Ghana</option>
+                    <option value="Niger" >Niger</option>
+                </select>
+            </div>
+            <div id="formville">
+                <label for="ville">Ville</label>
+                <input type="text" name="ville" id="ville" required>
+            </div>
+            <div id="formrue">
+                <label for="rue">Rue/Secteur</label>
+                <input type="text" name="rue" id="rue" required>
+            </div>
+
+            <div class="comm">
+                <button class="com" type="submit" onclick="localStorage.clear();">Passer mon panier en commande</button>
+            </div>
+    </form>
+    </div>
 </div>
-<div class="comm">
-    <a href="" class="com">Commander le panier</a>
-</div>
+
+{% endblock %} {% block js %}
+<script type="text/javascript">
+    if (localStorage.getItem('panier') == null) {
+        var panier = {};
+    } else {
+        var panier = JSON.parse(localStorage.getItem('panier'));
+    }
+
+    var itemList = document.getElementById('item-list');
+    if (Object.keys(panier).length === 0) {
+        var ligne = document.createElement('tr');
+        var col = document.createElement('td');
+        col.setAttribute('colspan', '6');
+        col.textContent = "votre panier est vide";
+        ligne.appendChild(col);
+        itemList.appendChild(ligne);
+    } else {
+
+
+        for (var item in panier) {
+            (function(item) {
+
+
+                var produit = panier[item];
+                var imageurl = produit[0];
+                var titre = produit[1];
+                var quantite = produit[2];
+                var prix = produit[3];
+                var total = produit[4];
+
+                var row = document.createElement('tr');
+                var imageCell = document.createElement('td');
+                var image = document.createElement('img');
+                image.src = imageurl;
+                image.alt = 'image';
+                imageCell.appendChild(image);
+
+                var titreCell = document.createElement('td');
+                titreCell.textContent = titre;
+
+                var quantitecell = document.createElement('td');
+                quantitecell.textContent = quantite
+
+                var prixCell = document.createElement('td');
+                prixCell.textContent = prix + 'F CFA';
+
+
+                var totalcell = document.createElement('td');
+                totalcell.textContent = total + 'F CFA';
+
+                var etatcell = document.createElement('td');
+
+                var modif = document.createElement('a');
+                var modifIcon = document.createElement('i');
+                modifIcon.className = "fas fa-edit";
+                modifIcon.style.color = 'green';
+                modifIcon.style.fontSize = '20px';
+                modifIcon.style.cursor = 'pointer'
+                modif.appendChild(modifIcon);
+                etatcell.appendChild(modif);
+
+                modif.addEventListener('click', function(event) {
+
+                    var item_id = item;
+                    event.preventDefault();
+                    var qte = quantitecell;
+                    var quantity = qte.textContent;
+
+                    var form = document.createElement('form');
+                    var input = document.createElement('input');
+                    var btnsubmit = document.createElement('button');
+
+                    input.type = 'number';
+                    input.name = 'newQuantity';
+                    input.value = quantity;
+
+                    btnsubmit.type = 'submit';
+                    btnsubmit.textContent = 'Valider';
+
+                    form.appendChild(input);
+                    form.appendChild(btnsubmit);
+
+                    qte.innerHTML = '';
+                    qte.appendChild(form);
+
+                    form.addEventListener('submit', function(event) {
+                        event.preventDefault();
+                        var newqte = input.value;
+
+                        var panier = JSON.parse(localStorage.getItem('panier'));
+                        if (panier.hasOwnProperty(item_id)) {
+                            panier[item_id][2] = newqte;
+                            panier[item_id][4] = panier[item_id][2] * panier[item_id][3];
+                            localStorage.setItem('panier', JSON.stringify(panier));
+                            console.log("quantité mis a jour:", item_id);
+                        } else {
+                            console.log("mauvais");
+                        }
+                        window.location.reload();
+
+                    });
+
+
+                });
+
+
+                var supp = document.createElement('a');
+                var suppIcon = document.createElement('i');
+                suppIcon.className = "fas fa-trash-alt";
+                suppIcon.style.color = 'red';
+                suppIcon.style.fontSize = '20px'
+                suppIcon.style.cursor = 'pointer'
+                supp.appendChild(suppIcon);
+                etatcell.appendChild(supp);
+
+
+
+                supp.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    var items = item;
+                    console.log(items);
+                    supprimer(items);
+                    this.parentNode.parentNode.remove();
+                    window.location.reload();
+                });
+
+
+
+
+                row.setAttribute('currentId', item);
+                row.appendChild(imageCell);
+                row.appendChild(titreCell);
+                row.appendChild(quantitecell);
+                row.appendChild(prixCell);
+                row.appendChild(totalcell);
+                row.appendChild(etatcell);
+
+
+
+
+                itemList.appendChild(row);
+
+            })(item)
+
+
+
+
+        }
+    }
+
+    function supprimer(item_id) {
+        var panier = JSON.parse(localStorage.getItem('panier'));
+        if (panier.hasOwnProperty(item_id)) {
+            delete panier[item_id];
+            localStorage.removeItem('panier')
+            localStorage.setItem('panier', JSON.stringify(panier));
+            console.log('produit supprime', item_id);
+        } else {
+            console.log('mauvais');
+        }
+    }
+
+    $('#items').val(JSON.stringify(panier))
+        //$('#items').val(JSON.stringify(panier))
+</script>
 {% endblock %}

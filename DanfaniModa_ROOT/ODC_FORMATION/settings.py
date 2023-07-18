@@ -17,6 +17,11 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+import mimetypes
+
+mimetypes.add_type("application/javascript", ".js", False)
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -79,7 +84,7 @@ DATABASES = {
     
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'shop',
+        'NAME': 'danfanimoda',
         'USER': 'postgres',
         'PASSWORD': '7727',
         'HOST':'127.0.0.1',

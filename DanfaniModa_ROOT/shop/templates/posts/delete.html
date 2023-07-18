@@ -7,7 +7,7 @@
         <form action="" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <button class="deletebouton" type="submit">Supprimer</button>
-            <a class="deleteannuler" href="{% url 'panier' %}">Annuler</a>
+            <a class="deleteannuler" href="{% url 'supprimer' %}">Annuler</a>
         </form>
     </div>
 </div>

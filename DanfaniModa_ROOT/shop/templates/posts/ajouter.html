@@ -1,0 +1,10 @@
+{% extends 'posts/tableau.html' %}{% load static %}{% block contenu %}
+<center>
+    <div class="">
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %} {{ form.as_p }}
+            <button class="btn-ajouter-produit" type="submit">Ajouter</button>
+        </form>
+    </div>
+</center>
+{% endblock %}

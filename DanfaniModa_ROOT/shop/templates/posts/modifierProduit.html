@@ -1,0 +1,40 @@
+{% extends 'posts/tableau.html' %}{% load static %}{% block contenu %}
+<div>
+    <table class="table_border">
+        <thead>
+            <tr>
+
+                <th>Image</th>
+                <th>Titre</th>
+                <th>Prix</th>
+                <th>Description</th>
+                <th>Categorie</th>
+                <th>Similarité</th>
+                <th>Type</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            {% for item in mesProduit %}
+            <tr>
+                <td class="img"><img src="/{{ item.image }}" alt="" style="height: 50px; width: 50px;"></td>
+                <td class="itempro">{{ item.titre }}</td>
+                <td class="itemquan">{{ item.prix }}</td>
+                <td class="item">
+                    <p style="overflow: auto; width: 200px; height: 100px;">{{ item.description }}</p>
+                </td>
+                <td class="itemdate">{{ item.categorie }}</td>
+                <td class="itemdate">{{ item.similaire }}</td>
+                <td class="itemdate">{{ item.type }}</td>
+                {% if request.path == '/administration/modifier' %}
+                <td class="itemdate"><a href="{% url 'modifier_Produit' item.id %}"><i class="fas fa-edit" style="color: green;font-size: 20px;"></i></a></td>
+                {% else %}
+                <td class="itemdate"><a href="{% url 'supprimer_produit' item.id %}"><i class="fas fa-trash-alt" style="color: red;font-size: 20px;"></i></a></td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+    {% endblock %}

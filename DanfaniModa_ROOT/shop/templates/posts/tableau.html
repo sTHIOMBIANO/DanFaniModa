@@ -1,0 +1,60 @@
+{% extends 'posts/base.html' %}{% load static %}{% block content %}
+<hr>
+<div class="table">
+    <div class="line">
+        <div class="tab">
+            <h2>Tableau de board</h2>
+        </div>
+
+        <div class="tablecol">
+
+            <!-- <div class="tableinput" id="entrer"> -->
+
+            <form action="" method="GET">
+                <input type="search" name="items-name" placeholder="faire une recherche">
+
+                <button type="submit"><img src="{% static 'images/rec.png' %}" alt="image"></button>
+
+                <!-- <button type="submit" class="btn1">Rechercher</button> -->
+            </form>
+            <!-- </div> -->
+        </div>
+    </div>
+
+    <div class="milieu">
+        <div class="gauche">
+            <div class="{% if request.path == '/administration/commande' %}commandeUser{% endif %}">
+                <a href="{% url 'commandeUser' %}">Commandes</a>
+            </div>
+            <div class="{% if request.path == '/administration/ajouter/' %}ajouter{% endif %}">
+                <a href="{% url 'ajouter' %}">Ajouter un produit</a>
+            </div>
+            <div class="{% if request.path == '/administration/modifier' %}ajouter{% endif %}">
+                <a href="{% url 'modifier' %}">Modifier un produit</a>
+            </div>
+            <div class="{% if request.path == '/administration/supprimer' %}ajouter{% endif %}">
+                <a href="{% url 'supprimer' %}">Supprimer un produit</a>
+            </div>
+            <div>
+                <a href=""> Statistiques</a>
+            </div>
+            <div>
+                <a href="">Historiques</a>
+            </div>
+        </div>
+        <div class="droite">
+            <div id="contenu">
+                {% block contenu %}{% endblock %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %} {% block js %}
+<script>
+    nom = document.getElementById('entrer');
+    nom.addEventListener('click', function() {
+        nom.classList.add('divborder');
+    });
+</script>
+{% endblock %}

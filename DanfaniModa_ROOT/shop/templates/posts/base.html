@@ -7,32 +7,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link href="{% static 'style.css' %}" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer"
+    />
+
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous"> -->
+
+
+    <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
     <header>
-        <nav class="navbar">
+        <nav class="navbar1">
             <a href="" class="logo">DanFaniModa</a>
-            <div class="navlink">
+            <div class="navlink1">
                 <ul>
-                    <li><a href="{% url 'index' %}">Accueil</a></li>
-                    <li><a href="{% url 'pagne' %}">Pagne</a></li>
-                    {% if user.panier %}
-                    <li><a href="{% url 'panier' %}">Panier({{ user.panier.orders.count }})</a></li>
+                    <li><a href="{% url 'index' %}" class="{% if request.path == '/' %}colorindex{% endif %}">Accueil</a></li>
+                    <li><a href="{% url 'pagne' %}" class="{% if request.path == '/pagne/' %}colorindex{% endif %}">Pagne</a></li>
+                    {% if user.is_authenticated %}
+                    <li><a href="{% url 'panier' %}" id="panier" class="{% if request.path == '/panier/' %}colorindex{% endif %}">Panier()</a></li>
                     {% endif %}
-                    <li><a href="{% url 'porter' %}">Pret A Porter</a></li>
+                    <li><a href="{% url 'porter' %}" class="{% if request.path == '/porter/' %}colorindex{% endif %}">Pret A Porter</a></li>
                     <li><a href="">Categorie</a></li>
                 </ul>
             </div>
             <div class="menu-burger"><img src="{% static 'images/menu-burger.png' %}" alt=""></div>
         </nav>
     </header>
-    {% block content %}{% endblock %}
+    {% block content %} {% for message in messages.get_messages %}
+    <div class="alert alert-danger">{{ message }}</div>
+    {% endfor %} {% endblock %}
 </body>
 {% block js %}{% endblock %}
 <script>
     const menuberger = document.querySelector('.menu-burger');
-    const navlinks = document.querySelector('.navlink');
+    const navlinks = document.querySelector('.navlink1');
     menuberger.addEventListener('click', () => {
         navlinks.classList.toggle('mobile-menu')
     });
