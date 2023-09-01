@@ -32,21 +32,49 @@
                     {% endif %}
                     <li><a href="{% url 'porter' %}" class="{% if request.path == '/porter/' %}colorindex{% endif %}">Pret A Porter</a></li>
                     <li><a href="">Categorie</a></li>
+                    <li id="btn_class1">
+
+                    </li>
+                    <li id="admin1">
+                        {% if user.is_authenticated and user.is_staff and user.is_superuser %}
+                        <a href="{% url 'tableau' %}">Page admin</a> {% endif %}
+
+                    </li>
+
                 </ul>
             </div>
             <div class="menu-burger"><img src="{% static 'images/menu-burger.png' %}" alt=""></div>
         </nav>
     </header>
+
     {% block content %} {% for message in messages.get_messages %}
     <div class="alert alert-danger">{{ message }}</div>
     {% endfor %} {% endblock %}
+
 </body>
 {% block js %}{% endblock %}
 <script>
     const menuberger = document.querySelector('.menu-burger');
     const navlinks = document.querySelector('.navlink1');
+    const body = document.querySelector('body');
+    const btn_class1 = document.getElementById('btn_class1')
+    var loggedIn = `{% if user.is_authenticated %}true{% else %}false{% endif %}`;
+    var logIn = JSON.parse(loggedIn)
+    console.log(logIn)
+    const searchForm = document.getElementById('search-form');
+
     menuberger.addEventListener('click', () => {
         navlinks.classList.toggle('mobile-menu')
+        body.classList.toggle('mobile-menu-open')
+        if (logIn) {
+            btn_class1.innerHTML = `<a href="{% url 'deconnect' %}" class="btn2">Se deconnecter</a>`;
+
+        } else {
+
+            btn_class1.innerHTML = `<a href="{% url 'connect' %}" class="btn1" type="submit">Connexion</a>`;
+        }
+
+
     });
 </script>
 

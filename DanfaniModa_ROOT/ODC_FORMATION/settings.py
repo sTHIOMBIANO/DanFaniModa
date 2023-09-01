@@ -84,9 +84,9 @@ DATABASES = {
     
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'danfanimoda',
+        'NAME': 'shop',
         'USER': 'postgres',
-        'PASSWORD': '7727',
+        'PASSWORD': '60128',
         'HOST':'127.0.0.1',
         'PORT':'5433',
 

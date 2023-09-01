@@ -1,21 +1,21 @@
 {% extends 'posts/base.html' %}{% load static %}{% block content %}
 <hr>
-<div class="btnsupp">
+<div class="btnsupp" id="btnsupp">
     <a href="{% url 'index' %}" class="ajoutpan">Ajouter a mon panier</a>
     <a href="" class="supp" onclick="
     localStorage.clear();">Vider mon panier</a>
 </div>
 
-<div class="pan">
-    <h1>Les produits de mon papier</h1>
+<div class="pan" id="pan">
+    <h1>Les produits de mon panier</h1>
 </div>
 
-<div class="formpanier">
+<div class="formpanier" id="formpanier">
 
-    <div class="pan1">
-        <table>
+    <div class="pan1" id="pan1">
+        <table id="table1">
             <thead>
-                <tr class="col">
+                <tr class="col" id="colth">
                     <th>Image</th>
                     <th>Titre</th>
                     <th>Quantité</th>
@@ -42,7 +42,7 @@
 
         </table>
     </div>
-    <form action="{% url 'commande' %}" method="POST">
+    <form action="{% url 'commande' %}" method="POST" id="format">
         {% csrf_token %} {% if user.is_authenticated %}
         <input type="hidden" id="items" name="item" value=""> {% endif %}
         <div class="pan2">

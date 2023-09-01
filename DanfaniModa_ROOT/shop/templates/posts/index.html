@@ -1,22 +1,22 @@
 {% extends 'posts/base.html' %}{% load static %}{% block content %}
-
+<hr>
 <div class="ligne">
     <div class="col1">
         <img src="{% static 'images/rec.png' %}" alt="image">
     </div>
     <div class="col2">
-        <form action="" method="GET">
-            <input type="search" name="items-name" placeholder="Entrer le prix de votre wallet">
+        <form action="" method="GET" id="search-form">
+            <input type="search" name="items-name" placeholder="Rechercher">
             <button type="submit" class="btn1">Rechercher</button>
         </form>
     </div>
-    <div class="btn_class">
+    <div class="btn_class" id="btn_class">
         {% if user.is_authenticated %}
         <a href="{% url 'deconnect' %}" class="btn2">Se deconnecter</a>{% else %}
         <a href="{% url 'connect' %}" class="btn1" type="submit">Connexion</a>{% endif %}
 
     </div>
-    <div class="admin">
+    <div class="admin" id="admin">
         {% if user.is_authenticated and user.is_staff and user.is_superuser %}
         <a href="{% url 'tableau' %}">Page admin</a> {% endif %}
     </div>
