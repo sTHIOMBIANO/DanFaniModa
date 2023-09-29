@@ -15,6 +15,7 @@ import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+STATIC_ROOT=os.path.join(BASE_DIR,"static")
 
 
 import mimetypes
@@ -29,7 +30,7 @@ mimetypes.add_type("application/javascript", ".js", False)
 SECRET_KEY = 'django-insecure-08rf5rr0auq+dnsn1$m6ouyto!huc)urul$s!he%do3xm@8ot&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
