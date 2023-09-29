@@ -1,1 +1,2 @@
-python-3.10.*
+python3.10
+pip install psycopg2
