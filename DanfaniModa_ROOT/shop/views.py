@@ -57,7 +57,8 @@ def pagne(request):
 	return render(request,"posts/pagne.html",{"mes_pagne":mes_pagne})
 
 def porter(request):
-	pret_a_porter=Produit.objects.filter(titre__icontains="Habit")
+	# pret_a_porter=Produit.objects.filter(titre__icontains="Habit")
+	pret_a_porter=Produit.objects.filter(Q(titre__icontains="Habit") | Q(titre__icontains="Chemise"))
 	return render(request,"posts/porter.html",{"pret_a_porter":pret_a_porter})
 
 def produit_similaire_details(request,titre):

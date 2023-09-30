@@ -26,8 +26,8 @@ class Produit(models.Model):
     description=models.TextField()
     categorie=models.ForeignKey(Categorie,on_delete=models.CASCADE)
     image=models.ImageField(upload_to="static/images",blank=True)
-    similaire=models.CharField(default="blanc")
-    type=models.CharField(default="pagne")
+    similaire=models.CharField(default="blanc",max_length=128)
+    type=models.CharField(default="pagne",max_length=128)
     date_ajout=models.DateTimeField(auto_now=True)
 
 

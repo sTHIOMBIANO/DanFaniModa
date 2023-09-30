@@ -30,7 +30,7 @@ mimetypes.add_type("application/javascript", ".js", False)
 SECRET_KEY = 'django-insecure-08rf5rr0auq+dnsn1$m6ouyto!huc)urul$s!he%do3xm@8ot&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -84,16 +84,16 @@ WSGI_APPLICATION = 'ODC_FORMATION.wsgi.application'
 DATABASES = {
     
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'shop',
-        'USER': 'postgres',
-        'PASSWORD': '60128',
-        'HOST':'127.0.0.1',
-        'PORT':'5433',
+        # 'ENGINE': 'django.db.backends.postgresql',
+        # 'NAME': 'shop',
+        # 'USER': 'postgres',
+        # 'PASSWORD': '6012',
+        # 'HOST':'127.0.0.1',
+        # 'PORT':'5433',
 
 
-        #'ENGINE': 'django.db.backends.sqlite3',
-        #'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -133,6 +133,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS=['staticfiles']
+MEDIA_URL='/images/'
 
 
 # Default primary key field type
